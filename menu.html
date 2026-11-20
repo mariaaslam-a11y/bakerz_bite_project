@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakerz Bite - Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAvigation Bar -->
+  <nav class="navbar navbar-expand-lg sticky-top top-navigation">
+    <div class="container main-container">
+
+      <a class="navbar-brand my-logo" href="index.html">
+        <img src="images/Logo.png" alt="Bakerz Bite" width="175" height="75">
+      </a>
+
+      <button class="navbar-toggler mobile-btn" type="button" data-bs-toggle="collapse" data-bs-target="#Links" aria-controls="Links" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="Links">
+        <ul class="navbar-nav align-items-center gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link active" href="menu.html">Menu</a></li>
+          <li class="nav-item"><a class="nav-link" href="merchandize.html">Merchandise</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.html">Faqs</a></li>
+          <li class="nav-item"><a class="nav-link" href="offers.html">Offers</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+<main>
+    <section class="hero4">
+        <h1>Our Products</h1>
+        <p>Freshly baked, made with love.</p>
+    </section>
+
+    <section class="products-section">
+        <div class="categories">
+            <button class="category-btn active" data-category="All">All</button>
+            <button class="category-btn" data-category="Cakes">Cakes</button>
+            <button class="category-btn" data-category="Cupcake">Cupcakes</button>
+            <button class="category-btn" data-category="Cookies">Cookies</button>
+            <button class="category-btn" data-category="Pies">Pies</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search products...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <div class="products-grid" id="productGrid"></div>
+    </section>
+</main>
+
+<!-- Product Modal -->
+<div class="modal" id="productModal">
+    <div class="modal-content">
+        <button class="modal-close" id="closeModal" aria-label="Close">&times;</button>
+
+        <div class="modal-image">
+            <img id="modalImage" src="" alt="Product">
+        </div>
+
+        <div class="modal-details">
+            <h2 id="modalName"></h2>
+            <h3 id="modalPrice"></h3>
+            <p id="modalDescription"></p>
+
+            <h3>Quality Ingredients</h3>
+            <ul id="modalIngredients"></ul>
+
+            <button id="addToCartBtn">
+                <i class="fas fa-shopping-cart"></i>
+                Add to Cart
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// PRODUCT DATA
+const products = [
+    {
+        id: 1,
+        name: "Dark Chocolate Cake",
+        category: "Cakes",
+        price: 1200,
+        image: "images/Cake1.jpg",
+        description: "A rich chocolate cake with creamy chocolate frosting.",
+        ingredients: ["Premium Cocoa", "Fresh Cream", "Chocolate Chips"]
+    },
+    {
+        id: 2,
+        name: "Chocolate Cupcakes",
+        category: "Cupcake",
+        price: 450,
+        image: "images/Cupcake1.jpg",
+        description: "A soft and fluffy vanilla sponge layered with fresh strawberry cream and sweet strawberry filling. Decorated with smooth pink frosting and juicy fresh strawberries.",
+        ingredients: ["Vanilla Extract", "Fresh Strawberries", "Butter", "Whipped Cream"]
+    },
+    {
+        id: 3,
+        name: "Chocolate Cake",
+        category: "Cakes",
+        price: 1400,
+        image: "images/Cake2.jpg",
+        description: "A soft and moist red velvet sponge layered with rich cream cheese frosting. Finished with smooth frosting and delicate cake crumbs.",
+        ingredients: ["Soft Red Velvet Sponge", "Cocoa Powder", "Cream Cheese", "Fresh Cream"]
+    },
+    {
+        id: 4,
+        name: "Vannila Croissant",
+        category: "Pastries",
+        price: 350,
+        image: "images/Golden Croissants in a Cozy Bakery.png",
+        description: "A golden, flaky, buttery croissant filled with rich melted chocolate. Crisp outside and soft inside.",
+        ingredients: ["Soft Flaky Pastry", "Fresh Butter", "Dark Chocolate"]
+    },
+    {
+        id: 5,
+        name: "Chocolate Chip Cookies",
+        category: "Cookies",
+        price: 400,
+        image: "images/Cookie1.jpg",
+        description: "Freshly baked golden cookies with a soft, chewy center and crispy edges, loaded with chocolate chips.",
+        ingredients: ["Rich Brown Sugar", "Vanilla Extract", "Fresh Butter", "Chocolate Chips"]
+    },
+    {
+        id: 6,
+        name: "Butter Cookies",
+        category: "Cookies",
+        price: 300,
+        image: "images/Cookie2.jpg",
+        description: "Delicate, golden butter cookies with a smooth, crumbly texture and rich buttery flavour.",
+        ingredients: ["Fresh Butter", "Powdered Sugar", "Flour"]
+    },
+    {
+        id: 7,
+        name: "Chocolate Pie",
+        category: "Pies",
+        price: 850,
+        image: "images/Pie1.jpg",
+        description: "A delicious homemade pie featuring a golden, flaky crust filled with sweet and juicy blueberries.",
+        ingredients: ["Fresh Blueberries", "Fresh Lemon Juice", "Butter", "Flaky Pie Crust"]
+    },
+    {
+        id: 8,
+        name: "Lava Cupcakes",
+        category: "Cupcake",
+        price: 450,
+        image: "images/Cupcake3.jpg",
+        description: "A soft and moist chocolate cake layered with creamy Oreo frosting and crunchy Oreo cookie pieces.",
+        ingredients: ["Vanilla Extract", "Cocoa Powder", "Oreo Cookies", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 9,
+        name: "Chocolate Oreo Cake",
+        category: "Cakes",
+        price: 1500,
+        image: "images/Cake3.jpg",
+        description: "A soft and fluffy vanilla sponge layered with fresh strawberry cream and sweet strawberry filling.",
+        ingredients: ["Chocolate Chunks", "Fresh Milk", "Butter", "Fresh Strawberries"]
+    },
+    {
+        id: 10,
+        name: "Lava Chocolate Cake",
+        category: "Cakes",
+        price: 1450,
+        image: "images/Cake4.jpg",
+        description: "A soft and moist chocolate cake layered with creamy Oreo frosting and crunchy Oreo cookie pieces.",
+        ingredients: ["Vanilla Extract", "Cocoa Powder", "Oreo Cookies", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 11,
+        name: "Apple Pie",
+        category: "Pies",
+        price: 750,
+        image: "images/Pie2.jpg",
+        description: "A classic golden, flaky pie crust filled with sweet and juicy apples, gently spiced with cinnamon.",
+        ingredients: ["Fresh Apples", "Cinnamon", "Flour"]
+    },
+    {
+        id: 12,
+        name: "Strawberry Chocolate Cake",
+        category: "Cakes",
+        price: 1300,
+        image: "images/Cake5.jpg",
+        description: "A rich and soft chocolate cake with a warm, gooey chocolate centre that melts with every bite.",
+        ingredients: ["Dark Chocolate", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 13,
+        name: "Chocolate Cake",
+        category: "Cakes",
+        price: 1200,
+        image: "images/Cake6.jpg",
+        description: "A delicious, rich chocolate bar cake with a smooth and creamy texture.",
+        ingredients: ["Fresh Milk", "Dark Milk Chocolate", "Cocoa Powder", "Fresh Cream", "Cocoa Butter"]
+    },
+    {
+        id: 14,
+        name: "Chocolate Flakes Cake",
+        category: "Cakes",
+        price: 1500,
+        image: "images/Cake1.jpg",
+        description: "A soft and moist chocolate cake covered with creamy chocolate frosting and topped with delicate chocolate flakes.",
+        ingredients: ["Chocolate Flakes", "Fresh Cream", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 15,
+        name: "Vanilla Cupcake",
+        category: "Cupcake",
+        price: 450,
+        image: "images/Cupcake4.jpg",
+        description: "Soft and fluffy vanilla Cupcakes topped with smooth, creamy vanilla frosting.",
+        ingredients: ["Vanilla Cream", "Powdered Sugar", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 16,
+        name: "Chocolate Cupcake",
+        category: "Cupcake",
+        price: 400,
+        image: "images/Cupcake5.jpg",
+        description: "A rich and soft chocolate Cupcake with a warm, gooey chocolate centre.",
+        ingredients: ["Dark Chocolate", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 17,
+        name: "Chocolate Croissant",
+        category: "Pastries",
+        price: 450,
+        image: "images/Croosiant.jfif",
+        description: "A golden, flaky and buttery croissant with a delicate vanilla flavour.",
+        ingredients: ["Vanilla Extract", "Fresh Milk", "Butter"]
+    },
+    {
+        id: 18,
+        name: "Chocolate Chip Cupcakes",
+        category: "Cupcake",
+        price: 450,
+        image: "images/Cupcake1.jpg",
+        description: "A soft and moist red velvet sponge topped with rich cream cheese frosting.",
+        ingredients: ["Soft Red Velvet Sponge", "Cocoa Powder", "Cream Cheese", "Fresh Cream"]
+    },
+    {
+        id: 19,
+        name: "Chocolate Hazelnuts Pie",
+        category: "Pies",
+        price: 850,
+        image: "images/Pie3.jpg",
+        description: "A silky chocolate ganache tart with toasted hazelnuts — classy and indulgent.",
+        ingredients: ["Hazelnuts", "Fresh Cream", "Chocolate", "Butter", "Flaky Pie Crust"]
+    },
+    {
+        id: 20,
+        name: "Creamy Vanilla Croissant",
+        category: "Pastries",
+        price: 450,
+        image: "images/cremy.jfif",
+        description: "A golden, flaky croissant filled with smooth vanilla cream.",
+        ingredients: ["Vanilla Cream", "Fresh Butter", "Flaky Pastry"]
+    },
+    {
+        id: 21,
+        name: "Chocolatechip Croissant",
+        category: "Pastries",
+        price: 400,
+        image: "images/chip.jfif",
+        description: "Buttery, flaky croissants filled with gooey chocolate chips and topped with a golden cookie crumble.",
+        ingredients: ["Chocolate Chips", "Chocolate Cream", "Butter", "Flaky Pastry"]
+    },
+    {
+        id: 22,
+        name: "Dark Chocolate Cookies",
+        category: "Cookies",
+        price: 400,
+        image: "images/Cookie3.jpg",
+        description: "Freshly baked golden cookies with a soft chewy center, crispy edges, caramel and coconut.",
+        ingredients: ["Rich Brown Sugar", "Vanilla Extract", "Fresh Butter", "Coconut", "Caramel"]
+    }
+];
+
+const productGrid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const categoryButtons = document.querySelectorAll("[data-category]");
+const productModal = document.getElementById("productModal");
+const modalImage = document.getElementById("modalImage");
+const modalName = document.getElementById("modalName");
+const modalPrice = document.getElementById("modalPrice");
+const modalDescription = document.getElementById("modalDescription");
+const modalIngredients = document.getElementById("modalIngredients");
+const closeModal = document.getElementById("closeModal");
+const addToCartBtn = document.getElementById("addToCartBtn");
+
+let selectedCategory = "All";
+let selectedProduct = null;
+
+// DISPLAY PRODUCTS
+function displayProducts() {
+    if (!productGrid) return;
+
+    productGrid.innerHTML = "";
+
+    const searchText = searchInput
+        ? searchInput.value.toLowerCase().trim()
+        : "";
+
+    const filteredProducts = products.filter(product => {
+        const matchesCategory =
+            selectedCategory === "All" ||
+            product.category.toLowerCase() === selectedCategory.toLowerCase();
+
+        const matchesSearch =
+            product.name.toLowerCase().includes(searchText);
+
+        return matchesCategory && matchesSearch;
+    });
+
+    if (filteredProducts.length === 0) {
+        productGrid.innerHTML = '<p class="no-products">No products found.</p>';
+        return;
+    }
+
+    filteredProducts.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.onerror=null;this.src='images/Cake1.jpg';">
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <p>Rs. ${product.price}</p>
+                <button class="view-btn">View Details</button>
+            </div>
+        `;
+
+        card.addEventListener("click", () => {
+            openProductModal(product);
+        });
+
+        productGrid.appendChild(card);
+    });
+}
+
+// CATEGORY FILTERS
+categoryButtons.forEach(button => {
+    button.addEventListener("click", function () {
+        selectedCategory = this.dataset.category;
+
+        categoryButtons.forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+
+        displayProducts();
+    });
+});
+
+// SEARCH
+if (searchInput) {
+    searchInput.addEventListener("input", function () {
+        displayProducts();
+    });
+}
+
+// OPEN MODAL
+function openProductModal(product) {
+    selectedProduct = product;
+
+    modalImage.src = product.image;
+    modalImage.alt = product.name;
+    modalName.textContent = product.name;
+    modalPrice.textContent = "Rs. " + product.price;
+    modalDescription.textContent = product.description;
+
+    modalIngredients.innerHTML = "";
+    product.ingredients.forEach(ingredient => {
+        const li = document.createElement("li");
+        li.textContent = ingredient;
+        modalIngredients.appendChild(li);
+    });
+
+    productModal.style.display = "flex";
+}
+
+// CLOSE MODAL
+function hideModal() {
+    productModal.style.display = "none";
+    selectedProduct = null;
+}
+
+if (closeModal) {
+    closeModal.addEventListener("click", hideModal);
+}
+
+// Click outside to close
+productModal.addEventListener("click", function (event) {
+    if (event.target === productModal) {
+        hideModal();
+    }
+});
+
+// Escape key
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && productModal.style.display === "flex") {
+        hideModal();
+    }
+});
+
+// ADD TO CART
+addToCartBtn.addEventListener("click", function () {
+    if (!selectedProduct) return;
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existingItem = cart.find(item => item.id === selectedProduct.id);
+
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            ...selectedProduct,
+            quantity: 1
+        });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Product added to your cart!");
+    hideModal();
+});
+
+// INITIAL DISPLAY
+selectedCategory = "All";
+categoryButtons.forEach(button => {
+    button.classList.toggle("active", button.dataset.category === "All");
+});
+displayProducts();
+</script>
+<!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="footer-logo">
+            <img src="images/Logo.png" alt="Logo" width="175" height="75">
+          </div>
+          <span class="footer-text">Sweet Moments, Always!</span>
+        </div>
+
+        <div class="col-6 col-md-6">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="merchandize.html">Merchandise</a></li>
+            <li><a href="faqs.html">Faqs</a></li>
+            <li><a href="offers.html">Offers</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-2">
+          <h4>Follow Us</h4>
+          <div class="icons">
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-discord"></i></a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom mt-4">
+        <p>&copy; 2026 Bakerz Bite. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
